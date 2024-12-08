@@ -29,6 +29,13 @@ export async function POST(request: Request) {
   console.log('Prompt:', prompt);
 
   try {
+    // Buscar o endereço da carteira do usuário
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('wallet_address')
+      .eq('user_id', userId)
+      .single();
+
     console.log('Generating emoji with Replicate');
     const output = await replicate.run(
       "fofr/sdxl-emoji:dee76b5afde21b0f01ed7925f0665b7e879c50ee718c5f78a9d38e04d523cc5e",
@@ -89,7 +96,7 @@ export async function POST(request: Request) {
       .insert({
         image_url: publicUrl,
         prompt,
-        creator_user_id: userId,
+        creator_user_id: userId
       })
       .select()
       .single();

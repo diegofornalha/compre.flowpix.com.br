@@ -4,9 +4,10 @@ import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { Card } from './ui/card';
 import { useEmojiStore } from '../lib/emojiStore';
-import { Download, Heart } from 'lucide-react';
+import { Download, Heart, Trash2, Pencil, Check, X } from 'lucide-react';
 import { Button } from './ui/button';
 import { useAuth } from '@clerk/nextjs';
+import { Input } from './ui/input';
 
 interface Emoji {
   id: number;
@@ -17,10 +18,34 @@ interface Emoji {
   isLiked?: boolean;
 }
 
+interface Profile {
+  user_id: string;
+  wallet_address: string | null;
+}
+
 export default function EmojiGrid() {
   const [emojis, setEmojis] = useState<Emoji[]>([]);
+  const [profiles, setProfiles] = useState<Record<string, Profile>>({});
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingPrompt, setEditingPrompt] = useState('');
   const newEmoji = useEmojiStore((state) => state.newEmoji);
   const { isSignedIn, userId } = useAuth();
+
+  const fetchProfiles = useCallback(async (userIds: string[]) => {
+    try {
+      const response = await fetch('/api/profiles?userIds=' + userIds.join(','));
+      const data = await response.json();
+      if (data.success) {
+        const profileMap = data.profiles.reduce((acc: Record<string, Profile>, profile: Profile) => {
+          acc[profile.user_id] = profile;
+          return acc;
+        }, {});
+        setProfiles(profileMap);
+      }
+    } catch (error) {
+      console.error('Error fetching profiles:', error);
+    }
+  }, []);
 
   const fetchEmojis = useCallback(async () => {
     console.log('Fetching emojis');
@@ -37,10 +62,20 @@ export default function EmojiGrid() {
           console.log('User likes:', likesData);
           const likedEmojiIds = new Set(likesData.likes.map((like: { emoji_id: number }) => like.emoji_id));
           
-          setEmojis(data.emojis.map((emoji: Emoji) => ({
+          const emojisWithLikes = data.emojis.map((emoji: Emoji) => ({
             ...emoji,
             isLiked: likedEmojiIds.has(emoji.id)
-          })));
+          }));
+
+          setEmojis(emojisWithLikes);
+
+          // Buscar perfis dos criadores
+          const uniqueUserIds = Array.from<string>(
+            new Set<string>(
+              emojisWithLikes.map((emoji: Emoji) => emoji.creator_user_id)
+            )
+          );
+          fetchProfiles(uniqueUserIds);
         } else {
           setEmojis(data.emojis.map((emoji: Emoji) => ({ ...emoji, isLiked: false })));
         }
@@ -50,7 +85,7 @@ export default function EmojiGrid() {
     } catch (error) {
       console.error('Error fetching emojis:', error);
     }
-  }, [isSignedIn, userId]);
+  }, [isSignedIn, userId, fetchProfiles]);
 
   useEffect(() => {
     fetchEmojis();
@@ -116,6 +151,71 @@ export default function EmojiGrid() {
     }
   };
 
+  const handleDelete = async (emojiId: number) => {
+    if (!isSignedIn) {
+      console.log('User not signed in, cannot delete emoji');
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/delete-emoji?id=${emojiId}`, {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        setEmojis(prevEmojis => prevEmojis.filter(emoji => emoji.id !== emojiId));
+      } else {
+        throw new Error(data.error || 'Failed to delete emoji');
+      }
+    } catch (error) {
+      console.error('Error deleting emoji:', error);
+    }
+  };
+
+  const startEditing = (emoji: Emoji) => {
+    setEditingId(emoji.id);
+    setEditingPrompt(emoji.prompt);
+  };
+
+  const cancelEditing = () => {
+    setEditingId(null);
+    setEditingPrompt('');
+  };
+
+  const saveEditing = async (emojiId: number) => {
+    try {
+      const response = await fetch('/api/update-emoji', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          emojiId,
+          prompt: editingPrompt,
+        }),
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        setEmojis(prevEmojis =>
+          prevEmojis.map(emoji =>
+            emoji.id === emojiId
+              ? { ...emoji, prompt: editingPrompt }
+              : emoji
+          )
+        );
+        setEditingId(null);
+        setEditingPrompt('');
+      } else {
+        throw new Error(data.error || 'Failed to update emoji');
+      }
+    } catch (error) {
+      console.error('Error updating emoji:', error);
+    }
+  };
+
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
       {emojis.map((emoji) => (
@@ -145,13 +245,68 @@ export default function EmojiGrid() {
               >
                 <Heart size={20} fill={emoji.isLiked ? 'currentColor' : 'none'} />
               </Button>
+              {userId === emoji.creator_user_id && (
+                <>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => handleDelete(emoji.id)}
+                    className="text-white ml-2"
+                  >
+                    <Trash2 size={20} />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => startEditing(emoji)}
+                    className="text-white ml-2"
+                  >
+                    <Pencil size={20} />
+                  </Button>
+                </>
+              )}
             </div>
           </div>
-          <div className="mt-2 flex justify-between items-center text-sm">
-            <p className="truncate flex-grow">{emoji.prompt}</p>
-            <span className="ml-2 flex items-center">
-              <Heart size={14} className="mr-1" /> {emoji.likes_count}
-            </span>
+          <div className="mt-2 flex flex-col">
+            <div className="flex justify-between items-center text-sm">
+              {editingId === emoji.id ? (
+                <div className="flex items-center flex-grow">
+                  <Input
+                    value={editingPrompt}
+                    onChange={(e) => setEditingPrompt(e.target.value)}
+                    className="text-sm h-7 mr-2"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => saveEditing(emoji.id)}
+                    className="h-7 w-7 p-0 mr-1"
+                  >
+                    <Check size={16} className="text-green-500" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={cancelEditing}
+                    className="h-7 w-7 p-0"
+                  >
+                    <X size={16} className="text-red-500" />
+                  </Button>
+                </div>
+              ) : (
+                <>
+                  <p className="truncate flex-grow">{emoji.prompt}</p>
+                  <span className="ml-2 flex items-center">
+                    <Heart size={14} className="mr-1" /> {emoji.likes_count}
+                  </span>
+                </>
+              )}
+            </div>
+            {profiles[emoji.creator_user_id]?.wallet_address && (
+              <div className="text-xs text-gray-500 mt-1 truncate">
+                Wallet: {profiles[emoji.creator_user_id]?.wallet_address?.slice(0, 6)}...{profiles[emoji.creator_user_id]?.wallet_address?.slice(-4)}
+              </div>
+            )}
           </div>
         </Card>
       ))}
