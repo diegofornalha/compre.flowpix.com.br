@@ -10,7 +10,7 @@ export default function TransakWidget() {
   const params = Object.fromEntries(
     Object.entries({
       apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY || '',
-      environment: process.env.NODE_ENV === 'production' ? 'PRODUCTION' : 'STAGING',
+      environment: 'STAGING',
       network: 'flow',
       cryptoCurrencyCode: 'FLOW',
       fiatCurrency: 'BRL',
@@ -26,7 +26,7 @@ export default function TransakWidget() {
     }).map(([key, value]) => [key, String(value)])
   );
 
-  const transakUrl = `https://global${process.env.NODE_ENV === 'production' ? '' : '-stg'}.transak.com/?${new URLSearchParams(params)}`;
+  const transakUrl = `https://global-stg.transak.com/?${new URLSearchParams(params)}`;
 
   return (
     <div className="hidden lg:block">
