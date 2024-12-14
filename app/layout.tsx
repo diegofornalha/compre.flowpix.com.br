@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import {
-  ClerkProvider,
-} from '@clerk/nextjs'
-import Header from "@/components/headers";
-import UserProfileInitializer from '../components/UserProfileInitializer';
+import { ClerkProvider } from '@clerk/nextjs'
+import UserProfileInitializer from '@/components/UserProfileInitializer';
+import Header from '@/components/headers';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,7 +30,7 @@ export default function RootLayout({
     <ClerkProvider publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY} signInUrl="/sign-in">
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white`}
         >
           <UserProfileInitializer />
           <Header />
