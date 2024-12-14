@@ -4,9 +4,6 @@ const nextConfig = {
     config.resolve.fallback = { ...config.resolve.fallback, process: false };
     return config;
   },
-  images: {
-    domains: ["cqrlonoblajaublsikmb.supabase.co"],
-  },
 };
 
 export default nextConfig;
