@@ -20,5 +20,3 @@ Use este guia para construir o backend da aplicação web do criador de contrata
    1. contratar_plano grid deve buscar e exibir todas as imagens da tabela "contratar_planos"
    2. Quando um novo contratar_plano for gerado, o contratar_planogrid deve ser atualizado automaticamente para adicionar o novo contratar_plano ao grid
 4. Interações de curtidas
-   1. Quando o usuário clicar no botão 'curtir', o num_likes deve aumentar na tabela 'contratar_planos'
-   2. Quando o usuário descurtir, o num_likes deve diminuir na tabela 'contratar_planos'

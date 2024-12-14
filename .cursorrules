@@ -1,77 +1,80 @@
-{
-  "rules": [
+module.exports = {
+  rules: [
     {
-      "name": "Documentação de referência",
-      "matches": "**/*.{ts,tsx}",
-      "message": "Consulte sempre os arquivos requirements/backend_instructions.md e requirements/frontend_instructions.md para referência"
+      name: "Documentação de referência",
+      matches: "**/*.{ts,tsx}",
+      message:
+        "Consulte sempre os arquivos requirements/backend_instructions.md e requirements/frontend_instructions.md para referência",
     },
     {
-      "name": "Componentes devem estar no diretório correto",
-      "matches": "**/*.tsx",
-      "excludes": ["app/**/*.tsx", "pages/**/*.tsx"],
-      "assert": "file.path.startsWith('components/')",
-      "message": "Componentes devem estar no diretório /components"
+      name: "Componentes devem estar no diretório correto",
+      matches: "**/*.tsx",
+      excludes: ["app/**/*.tsx", "pages/**/*.tsx"],
+      assert: "file.path.startsWith('components/')",
+      message: "Componentes devem estar no diretório /components",
     },
     {
-      "name": "Nomenclatura de componentes",
-      "matches": "components/**/*.tsx",
-      "pattern": "^[a-z][a-zA-Z0-9-]*\\.tsx$",
-      "message": "Nomes de componentes devem usar kebab-case e terminar com .tsx"
+      name: "Nomenclatura de componentes",
+      matches: "components/**/*.tsx",
+      pattern: "^[a-z][a-zA-Z0-9-]*\\.tsx$",
+      message: "Nomes de componentes devem usar kebab-case e terminar com .tsx",
     },
     {
-      "name": "Imports do Supabase",
-      "matches": "**/*.ts",
-      "pattern": "import.*@supabase/supabase-js",
-      "message": "Certifique-se de usar as credenciais corretas do Supabase"
+      name: "Imports do Supabase",
+      matches: "**/*.ts",
+      pattern: "import.*@supabase/supabase-js",
+      message: "Certifique-se de usar as credenciais corretas do Supabase",
     },
     {
-      "name": "Rotas de API",
-      "matches": "app/api/**/*.ts",
-      "pattern": "export async function (GET|POST|PUT|DELETE)",
-      "message": "Handlers de API devem ser funções assíncronas"
+      name: "Rotas de API",
+      matches: "app/api/**/*.ts",
+      pattern: "export async function (GET|POST|PUT|DELETE)",
+      message: "Handlers de API devem ser funções assíncronas",
     },
     {
-      "name": "Verificação de autenticação",
-      "matches": "app/api/**/*.ts",
-      "pattern": "auth\\(\\)",
-      "message": "Endpoints de API devem verificar autenticação usando Clerk"
+      name: "Verificação de autenticação",
+      matches: "app/api/**/*.ts",
+      pattern: "auth\\(\\)",
+      message: "Endpoints de API devem verificar autenticação usando Clerk",
     },
     {
-      "name": "Componentes UI shadcn",
-      "matches": "components/ui/**/*.tsx",
-      "pattern": "React\\.forwardRef",
-      "message": "Componentes UI devem usar forwardRef para compatibilidade com shadcn"
+      name: "Componentes UI shadcn",
+      matches: "components/ui/**/*.tsx",
+      pattern: "React\\.forwardRef",
+      message:
+        "Componentes UI devem usar forwardRef para compatibilidade com shadcn",
     },
     {
-      "name": "Tipagem TypeScript",
-      "matches": "**/*.{ts,tsx}",
-      "excludes": ["*.d.ts"],
-      "pattern": "interface|type",
-      "message": "Use tipagem TypeScript apropriada"
+      name: "Tipagem TypeScript",
+      matches: "**/*.{ts,tsx}",
+      excludes: ["*.d.ts"],
+      pattern: "interface|type",
+      message: "Use tipagem TypeScript apropriada",
     },
     {
-      "name": "Estilização Tailwind",
-      "matches": "**/*.tsx",
-      "pattern": "className=",
-      "message": "Use classes do Tailwind para estilização"
+      name: "Estilização Tailwind",
+      matches: "**/*.tsx",
+      pattern: "className=",
+      message: "Use classes do Tailwind para estilização",
     },
     {
-      "name": "Use client directive",
-      "matches": "components/**/*.tsx",
-      "pattern": "\"use client\"",
-      "message": "Componentes interativos devem usar 'use client' directive"
+      name: "Use client directive",
+      matches: "components/**/*.tsx",
+      pattern: '"use client"',
+      message: "Componentes interativos devem usar 'use client' directive",
     },
     {
-      "name": "Variáveis de ambiente",
-      "matches": "**/*.{ts,tsx}",
-      "pattern": "process\\.env\\.",
-      "message": "Use variáveis de ambiente com tipagem apropriada"
+      name: "Variáveis de ambiente",
+      matches: "**/*.{ts,tsx}",
+      pattern: "process\\.env\\.",
+      message: "Use variáveis de ambiente com tipagem apropriada",
     },
     {
-      "name": "Verificação de perfil de usuário",
-      "matches": "app/api/user/**/*.ts",
-      "pattern": "profiles.*user_id",
-      "message": "Verifique se o usuário existe na tabela profiles antes de prosseguir"
-    }
-  ]
-}
+      name: "Verificação de perfil de usuário",
+      matches: "app/api/user/**/*.ts",
+      pattern: "profiles.*user_id",
+      message:
+        "Verifique se o usuário existe na tabela profiles antes de prosseguir",
+    },
+  ],
+};
