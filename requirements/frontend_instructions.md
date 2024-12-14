@@ -12,7 +12,7 @@ Use este guia para construir uma aplicação web onde usuários podem fornecer u
 
 # Documentação relevante
 
-## Como usar o modelo gerador de emoji do Replicate
+## Como FlowPix
 
 import Replicate from "replicate";
 
