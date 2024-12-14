@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    serverActions: true,
-  },
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -13,6 +10,13 @@ const nextConfig = {
   output: "standalone",
   reactStrictMode: true,
   swcMinify: true,
+  distDir: ".next",
+  cleanDistDir: true,
+  generateBuildId: async () => {
+    return "build-" + Date.now();
+  },
+  poweredByHeader: false,
+  pageExtensions: ["js", "jsx", "ts", "tsx"],
 };
 
 module.exports = nextConfig;
