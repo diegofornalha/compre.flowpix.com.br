@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import { getAuth, clerkClient } from '@clerk/nextjs/server';
+import { auth } from '@clerk/nextjs/server';
+import { clerkClient } from '@clerk/nextjs/server';
 
-export async function GET() {
-  const { userId } = getAuth();
+export async function GET(request: Request) {
+  const { userId } = auth();
   
   if (!userId) {
     return NextResponse.json({ error: 'Não autorizado' }, { status: 401 });

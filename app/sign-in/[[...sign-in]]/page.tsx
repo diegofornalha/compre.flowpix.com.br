@@ -12,6 +12,7 @@ export default function SignInPage() {
             card: "shadow-xl"
           }
         }}
+        path="/sign-in"
         routing="path"
         redirectUrl="/"
       />

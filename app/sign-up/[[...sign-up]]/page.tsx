@@ -12,6 +12,7 @@ export default function SignUpPage() {
             card: "shadow-xl"
           }
         }}
+        path="/sign-up"
         routing="path"
         redirectUrl="/"
       />
