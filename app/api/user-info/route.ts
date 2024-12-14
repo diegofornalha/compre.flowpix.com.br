@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getAuth } from '@clerk/nextjs/server';
-import { clerkClient } from '@clerk/nextjs';
+import { getAuth, clerkClient } from '@clerk/nextjs/server';
 
 export async function GET() {
   const { userId } = getAuth();
@@ -10,14 +9,12 @@ export async function GET() {
   }
 
   try {
-    // Obtém informações detalhadas do usuário atual
     const user = await clerkClient.users.getUser(userId);
     
     if (!user) {
       return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });
     }
 
-    // Retorna os dados do usuário de forma estruturada
     const userData = {
       id: user.id,
       firstName: user.firstName,
