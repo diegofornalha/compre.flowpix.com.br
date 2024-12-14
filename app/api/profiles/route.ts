@@ -6,10 +6,9 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export async function GET(request: Request) {
+export async function GET(request: Request, { params }: { params: { userIds?: string } }) {
   try {
-    const { searchParams } = new URL(request.url);
-    const userIds = searchParams.get('userIds')?.split(',') || [];
+    const userIds = params.userIds?.split(',') || [];
 
     if (userIds.length === 0) {
       return NextResponse.json({ error: 'No user IDs provided' }, { status: 400 });
@@ -27,4 +26,7 @@ export async function GET(request: Request) {
     console.error('Error fetching profiles:', error);
     return NextResponse.json({ error: 'Failed to fetch profiles' }, { status: 500 });
   }
-} 
+}
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0; 
