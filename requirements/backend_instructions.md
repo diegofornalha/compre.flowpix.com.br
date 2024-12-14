@@ -13,8 +13,9 @@ Use este guia para construir o backend da aplicação web do criador de contrata
    2. Se o usuário não existir, então criar um usuário na tabela 'profiles'
    3. Se o usuário já existir, prosseguir e passar o user_id para funções como gerar contratar_planos
 2. Upload de contratar_plano para o bucket de armazenamento "contratar_planos" do Supabase;
-   1. Quando o usuário gerar um contratar_plano, fazer upload do arquivo de imagem do contratar_plano retornado pelo Replicate para o bucket "contratar_planos" do Supabase
+
    2. Adicionar uma linha na tabela 'contratar_planos' onde a URL da imagem vai para a tabela "contratar_planos" como "image_url", e creator_user_id será o user_id atual
+
 3. Exibir todas as imagens no contratar_planogrid
    1. contratar_plano grid deve buscar e exibir todas as imagens da tabela "contratar_planos"
    2. Quando um novo contratar_plano for gerado, o contratar_planogrid deve ser atualizado automaticamente para adicionar o novo contratar_plano ao grid
