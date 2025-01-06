@@ -14,23 +14,8 @@ export default function Header() {
     };
 
     return (
-        <div className="fixed top-0 right-0 p-4 z-50">
-            <div className="flex items-center space-x-4">
-                <SignedOut>
-                    <CustomSignInButton />
-                </SignedOut>
-                <SignedIn>
-                    <UserButton 
-                        appearance={{
-                            elements: {
-                                avatarBox: "w-14 h-14",
-                                userButtonAvatarBox: "w-14 h-14",
-                                userButtonTrigger: "focus:shadow-none focus:outline-none"
-                            }
-                        }}
-                    />
-                </SignedIn>
-            </div>
-        </div>
+        <header className="flex items-center justify-end p-2">
+            <UserButton afterSignOutUrl="/" />
+        </header>
     );
 }
