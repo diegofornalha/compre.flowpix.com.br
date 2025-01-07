@@ -9,6 +9,7 @@ export default authMiddleware({
     "/eth",
     "/polygon",
     "/btc",
+    "/multichains(.*)",
     "/api/user",
     "/api/create-profile",
   ],

@@ -1,15 +1,22 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 
 interface TransakWidgetProps {
   cryptoCurrency?: string;
+  transactionType?: "BUY" | "SELL";
 }
 
-export default function TransakWidget({ cryptoCurrency = "FLOW" }: TransakWidgetProps) {
+export default function TransakWidget({ 
+  cryptoCurrency = "FLOW",
+  transactionType = "BUY"
+}: TransakWidgetProps) {
   const [iframeUrl, setIframeUrl] = useState<string>("");
   const isProduction = process.env.NEXT_PUBLIC_ENVIRONMENT === "production";
   const isEth = cryptoCurrency === "ETH";
+  const pathname = usePathname();
+  const isMultichains = pathname === "/multichains";
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -18,23 +25,27 @@ export default function TransakWidget({ cryptoCurrency = "FLOW" }: TransakWidget
     const params = new URLSearchParams({
       apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY || "",
       environment: isProduction ? "PRODUCTION" : "STAGING",
-      network: getNetwork(cryptoCurrency),
+      network: isMultichains ? "ethereum,polygon,arbitrum,optimism,binance-smart-chain,immutablex,cronos" : getNetwork(cryptoCurrency),
       fiatCurrency: "BRL",
       defaultFiatAmount: "200",
       themeColor: getThemeColor(cryptoCurrency),
       walletAddress: cryptoCurrency === "FLOW" ? "0xcee767cac4c076fb" : "",
       redirectURL: `${window.location.origin}/obrigado`,
       hostURL: window.location.origin,
-      exchangeType: "BUY",
+      exchangeType: transactionType,
       countryCode: "BR",
       paymentMethod: "credit_debit_card,pix,sepa_bank_transfer",
       disableFiatSelector: "true",
       fiatSupportedCountries: "BR",
       defaultCurrency: "BRL",
       language: "pt",
-      exchangeScreenTitle: isEth ? "Comprar na rede Ethereum" : `Comprar ${cryptoCurrency}`,
+      exchangeScreenTitle: isMultichains 
+        ? `${transactionType === "BUY" ? "Comprar" : "Vender"} em Múltiplas Redes` 
+        : isEth 
+        ? `${transactionType === "BUY" ? "Comprar" : "Vender"} na rede Ethereum` 
+        : `${transactionType === "BUY" ? "Comprar" : "Vender"} ${cryptoCurrency}`,
       hideMenu: "false",
-      disableCryptoSelector: isEth ? "false" : "true",
+      disableCryptoSelector: isMultichains ? "false" : isEth ? "false" : "true",
       isFeeCalculationHidden: "false",
       isAutoFillUserData: "true",
       colorMode: "LIGHT",
@@ -44,13 +55,13 @@ export default function TransakWidget({ cryptoCurrency = "FLOW" }: TransakWidget
       widgetWidth: "100%",
     });
 
-    // Adicionar cryptoCurrencyCode apenas se não for ETH
-    if (!isEth) {
+    // Adicionar cryptoCurrencyCode apenas se não for ETH ou multichains
+    if (!isEth && !isMultichains) {
       params.append("cryptoCurrencyCode", cryptoCurrency);
     }
 
     setIframeUrl(`${baseUrl}/?${params.toString()}`);
-  }, [isProduction, cryptoCurrency, isEth]);
+  }, [isProduction, cryptoCurrency, isEth, isMultichains, transactionType]);
 
   // Função auxiliar para determinar a rede correta
   function getNetwork(currency: string): string {
@@ -70,6 +81,8 @@ export default function TransakWidget({ cryptoCurrency = "FLOW" }: TransakWidget
 
   // Função auxiliar para determinar a cor do tema
   function getThemeColor(currency: string): string {
+    if (isMultichains) return "EF4444"; // Vermelho para a página multichains
+    
     switch (currency) {
       case "FLOW":
         return "12cf83";
