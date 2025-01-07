@@ -3,74 +3,197 @@
 import { SignUp } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { useInView } from "react-intersection-observer";
+
+// Embate 1: Animações e Transições
+// Vencedor: Animações Suaves e Progressivas
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 0.5,
+      staggerChildren: 0.1
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.5 }
+  }
+};
 
 export default function CadastroPage() {
+  // Embate 2: Detecção de Viewport
+  // Vencedor: Animação baseada em visualização
+  const [ref, inView] = useInView({
+    triggerOnce: true,
+    threshold: 0.1
+  });
+
+  // Embate 9: Configuração do Clerk
+  // Vencedor: Configuração Otimizada com Web3
+  const clerkAppearance = {
+    baseTheme: dark,
+    variables: {
+      colorPrimary: '#22c55e',
+      colorTextOnPrimaryBackground: 'white',
+    },
+    elements: {
+      formButtonPrimary:
+        "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl",
+      card: "bg-transparent shadow-none",
+      headerTitle: "text-gray-900 text-2xl",
+      headerSubtitle: "text-gray-600",
+      socialButtonsBlockButton: "border-gray-200 bg-white hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center gap-2",
+      socialButtonsBlockButtonText: "text-gray-600 font-medium",
+      socialButtonsProviderIcon: "w-5 h-5",
+      formFieldLabel: "text-gray-700 font-medium",
+      formFieldInput: "border-gray-200 focus:border-green-500 focus:ring-green-500 transition-all duration-200 rounded-lg",
+      footerActionText: "text-gray-600",
+      footerActionLink: "text-green-500 hover:text-green-600 transition-colors duration-200",
+      dividerLine: "bg-gray-200",
+      dividerText: "text-gray-500 bg-white px-4",
+      formFieldSuccessText: "text-green-500",
+      formFieldErrorText: "text-red-500",
+      // Embate 10: Feedback Visual
+      // Vencedor: Feedback Aprimorado
+      alert: "rounded-lg p-4 text-sm",
+      alertSuccess: "bg-green-50 text-green-700 border border-green-200",
+      alertWarning: "bg-yellow-50 text-yellow-700 border border-yellow-200",
+      alertError: "bg-red-50 text-red-700 border border-red-200"
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-white">
-      <div className="container mx-auto px-4 py-8 lg:py-12">
+    // Embate 3: Layout e Fundo
+    // Vencedor: Design com Gradiente Suave e Padrão Moderno
+    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden">
+      {/* Padrão de Fundo Decorativo */}
+      <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+      
+      <motion.div 
+        ref={ref}
+        initial="hidden"
+        animate={inView ? "visible" : "hidden"}
+        variants={containerVariants}
+        className="container mx-auto px-4 py-12 lg:py-16 relative z-10"
+      >
         <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-8">
-            <Link href="/" className="inline-block">
-              <h1 className="text-4xl lg:text-5xl font-bold text-green-500 hover:text-green-600 transition-colors">
+          {/* Embate 4: Header e Branding
+              Vencedor: Logo Animado com Efeito Neon */}
+          <motion.div 
+            variants={itemVariants}
+            className="text-center mb-12"
+          >
+            <Link href="/" className="inline-block group">
+              <motion.h1 
+                className="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent hover:scale-105 transform transition-all duration-300"
+                whileHover={{
+                  textShadow: "0 0 8px rgba(34, 197, 94, 0.4)"
+                }}
+              >
                 FLOW PIX
-              </h1>
+              </motion.h1>
             </Link>
-            <p className="mt-4 text-xl text-gray-600">
+            <motion.p 
+              variants={itemVariants}
+              className="mt-4 text-xl text-gray-600"
+            >
               A maneira mais fácil de comprar tokens FLOW no Brasil
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
 
-          {/* Signup Container */}
-          <div className="bg-gray-50 rounded-xl p-8 shadow-lg border border-gray-100">
-            <div className="mb-8 text-center">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Crie sua conta na FlowPix
-              </h2>
-              <p className="text-gray-600 max-w-md mx-auto">
-                Comece a comprar e vender FLOW tokens de forma rápida e segura
-              </p>
-            </div>
-
-            <SignUp
-              appearance={{
-                elements: {
-                  formButtonPrimary:
-                    "bg-green-500 hover:bg-green-600 text-white transition-colors",
-                  card: "bg-transparent shadow-none",
-                  headerTitle: "text-gray-900",
-                  headerSubtitle: "text-gray-600",
-                  socialButtonsBlockButton: "border-gray-200 bg-white hover:bg-gray-50",
-                  socialButtonsBlockButtonText: "text-gray-600",
-                  formFieldLabel: "text-gray-700",
-                  formFieldInput: "border-gray-200 focus:border-green-500 focus:ring-green-500",
-                  footerActionText: "text-gray-600",
-                  footerActionLink: "text-green-500 hover:text-green-600",
-                  dividerLine: "bg-gray-200",
-                  dividerText: "text-gray-500",
-                },
+          {/* Embate 5: Container de Cadastro
+              Vencedor: Card com Efeito de Profundidade e Borda Suave */}
+          <motion.div 
+            variants={itemVariants}
+            className="bg-white rounded-2xl p-8 lg:p-12 shadow-xl border border-gray-100 backdrop-blur-sm relative overflow-hidden"
+          >
+            {/* Efeito de Gradiente Animado */}
+            <motion.div 
+              className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-green-600/5"
+              animate={{
+                opacity: [0.5, 0.3, 0.5],
               }}
-              redirectUrl="/"
-              routing="path"
-              path="/cadastro"
-              signInUrl="/login"
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
             />
 
-            <div className="mt-8 text-center text-sm text-gray-500">
-              <p>
-                Ao se cadastrar, você concorda com nossos{" "}
-                <a href="/termos" className="text-green-500 hover:text-green-600">
-                  Termos de Serviço
-                </a>{" "}
-                e{" "}
-                <a href="/privacidade" className="text-green-500 hover:text-green-600">
-                  Política de Privacidade
-                </a>
-              </p>
+            <div className="relative z-10">
+              <motion.div 
+                variants={itemVariants}
+                className="mb-8 text-center"
+              >
+                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                  Crie sua conta na FlowPix
+                </h2>
+                <p className="text-gray-600 max-w-md mx-auto text-lg">
+                  Comece a comprar e vender FLOW tokens de forma rápida e segura
+                </p>
+              </motion.div>
+
+              {/* Embate 11: Integração Clerk
+                  Vencedor: Configuração Completa com Web3 */}
+              <SignUp
+                appearance={clerkAppearance}
+                redirectUrl="/obrigado"
+                routing="path"
+                path="/cadastro"
+                signInUrl="/login"
+                afterSignUpUrl="/obrigado"
+                localization={{
+                  socialButtonsBlockButton: {
+                    dividerText: "ou continue com"
+                  },
+                  formFieldLabel: {
+                    emailAddress: "E-mail",
+                    password: "Senha"
+                  },
+                  formButtonPrimary: {
+                    signUp: "Criar conta"
+                  },
+                  footerActionLink: {
+                    signIn: "Entrar"
+                  }
+                }}
+              />
+
+              {/* Embate 7: Termos e Condições
+                  Vencedor: Links Interativos com Feedback */}
+              <motion.div 
+                variants={itemVariants}
+                className="mt-8 text-center text-sm text-gray-500"
+              >
+                <p className="space-x-1">
+                  <span>Ao se cadastrar, você concorda com nossos</span>
+                  <Link 
+                    href="/termos" 
+                    className="text-green-500 hover:text-green-600 transition-colors duration-200 hover:underline"
+                  >
+                    Termos de Serviço
+                  </Link>
+                  <span>e</span>
+                  <Link 
+                    href="/privacidade" 
+                    className="text-green-500 hover:text-green-600 transition-colors duration-200 hover:underline"
+                  >
+                    Política de Privacidade
+                  </Link>
+                </p>
+              </motion.div>
             </div>
-          </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 } 
