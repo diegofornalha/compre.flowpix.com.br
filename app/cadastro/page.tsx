@@ -1,7 +1,6 @@
 "use client";
 
 import { SignUp } from "@clerk/nextjs";
-import { dark } from "@clerk/themes";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
@@ -37,12 +36,17 @@ export default function CadastroPage() {
   });
 
   // Embate 9: Configuração do Clerk
-  // Vencedor: Configuração Otimizada com Web3
+  // Vencedor: Tema Personalizado sem Dependências Externas
   const clerkAppearance = {
-    baseTheme: dark,
     variables: {
       colorPrimary: '#22c55e',
-      colorTextOnPrimaryBackground: 'white',
+      colorTextOnPrimaryBackground: '#ffffff',
+      colorBackground: '#ffffff',
+      colorText: '#111827',
+      colorDanger: '#ef4444',
+      colorSuccess: '#22c55e',
+      colorWarning: '#f59e0b',
+      borderRadius: '0.75rem'
     },
     elements: {
       formButtonPrimary:
@@ -61,12 +65,15 @@ export default function CadastroPage() {
       dividerText: "text-gray-500 bg-white px-4",
       formFieldSuccessText: "text-green-500",
       formFieldErrorText: "text-red-500",
-      // Embate 10: Feedback Visual
-      // Vencedor: Feedback Aprimorado
       alert: "rounded-lg p-4 text-sm",
       alertSuccess: "bg-green-50 text-green-700 border border-green-200",
       alertWarning: "bg-yellow-50 text-yellow-700 border border-yellow-200",
-      alertError: "bg-red-50 text-red-700 border border-red-200"
+      alertError: "bg-red-50 text-red-700 border border-red-200",
+      // Embate 10: Melhorias de Acessibilidade
+      formFieldInputShowPasswordButton: "text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-md",
+      formFieldInputShowPasswordIcon: "w-5 h-5",
+      formResendCodeLink: "text-green-500 hover:text-green-600 transition-colors duration-200",
+      otpCodeFieldInput: "border-gray-200 focus:border-green-500 focus:ring-green-500 transition-all duration-200 rounded-lg text-center"
     }
   };
 
@@ -141,8 +148,7 @@ export default function CadastroPage() {
                 </p>
               </motion.div>
 
-              {/* Embate 11: Integração Clerk
-                  Vencedor: Configuração Completa com Web3 */}
+              {/* Embate 11: Integração Clerk Otimizada */}
               <SignUp
                 appearance={clerkAppearance}
                 redirectUrl="/obrigado"
@@ -150,21 +156,6 @@ export default function CadastroPage() {
                 path="/cadastro"
                 signInUrl="/login"
                 afterSignUpUrl="/obrigado"
-                localization={{
-                  socialButtonsBlockButton: {
-                    dividerText: "ou continue com"
-                  },
-                  formFieldLabel: {
-                    emailAddress: "E-mail",
-                    password: "Senha"
-                  },
-                  formButtonPrimary: {
-                    signUp: "Criar conta"
-                  },
-                  footerActionLink: {
-                    signIn: "Entrar"
-                  }
-                }}
               />
 
               {/* Embate 7: Termos e Condições

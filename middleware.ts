@@ -14,17 +14,15 @@ export default authMiddleware({
   async afterAuth(auth, req) {
     if (auth.userId && auth.isPublicRoute) {
       try {
-        // Verificar se o perfil já existe
         const { data: profile } = await supabase
           .from("profiles")
           .select("*")
-          .eq("user_id", auth.userId)
+          .eq("id", auth.userId)
           .single();
 
-        // Se não existir, criar um novo perfil
         if (!profile) {
           await supabase.from("profiles").insert({
-            user_id: auth.userId,
+            id: auth.userId,
             credits: 3,
             tier: "free",
           });
