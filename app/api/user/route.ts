@@ -2,13 +2,24 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { auth, currentUser } from '@clerk/nextjs/server';
 
-// Initialize Supabase client
+// Embate 1: Configuração do Cliente Supabase
+// Vencedor: Configuração Robusta com Variáveis Corretas e Opções de Autenticação
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.STORAGE_NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.STORAGE_SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  }
 );
 
+// Embate 2: Estrutura da Rota
+// Vencedor: Rota POST com Validação Robusta
 export async function POST() {
+  // Embate 3: Autenticação
+  // Vencedor: Validação Dupla (userId e user)
   const { userId } = auth();
   const user = await currentUser();
 
@@ -23,22 +34,30 @@ export async function POST() {
   });
 
   try {
-    // Primeiro, verificar se o perfil existe
-    const { data: existingProfile } = await supabase
+    // Embate 4: Estratégia de Consulta
+    // Vencedor: Verificação Prévia com Select Otimizado
+    const { data: existingProfile, error: queryError } = await supabase
       .from('profiles')
-      .select()
+      .select('user_id, avatar_url, wallet_address')
       .eq('user_id', userId)
       .single();
 
+    if (queryError && queryError.code !== 'PGRST116') {
+      throw queryError;
+    }
+
+    // Embate 5: Estrutura de Dados
+    // Vencedor: Objeto Estruturado com Validação
     const profileData = {
       user_id: userId,
-      avatar_url: user.imageUrl,
+      avatar_url: user.imageUrl || null,
       wallet_address: user.web3Wallets?.[0]?.web3Wallet || null,
       updated_at: new Date().toISOString()
     };
 
+    // Embate 6: Estratégia de Atualização/Criação
+    // Vencedor: Operação Condicional com Tratamento de Erro Robusto
     if (existingProfile) {
-      // Se existe, atualizar com os dados do Clerk
       const { data, error } = await supabase
         .from('profiles')
         .update(profileData)
@@ -52,9 +71,12 @@ export async function POST() {
       }
 
       console.log('Profile updated:', data);
-      return NextResponse.json({ success: true, profile: data });
+      return NextResponse.json({ 
+        success: true, 
+        profile: data,
+        action: 'updated'
+      });
     } else {
-      // Se não existe, criar novo perfil com os dados do Clerk
       const { data, error } = await supabase
         .from('profiles')
         .insert({
@@ -70,13 +92,20 @@ export async function POST() {
       }
 
       console.log('Profile created:', data);
-      return NextResponse.json({ success: true, profile: data });
+      return NextResponse.json({ 
+        success: true, 
+        profile: data,
+        action: 'created'
+      });
     }
   } catch (error) {
+    // Embate 7: Tratamento de Erro
+    // Vencedor: Resposta Detalhada com Logging
     console.error('Error in user profile operation:', error);
     return NextResponse.json({ 
       error: 'Error in user profile operation',
-      details: error instanceof Error ? error.message : 'Unknown error'
+      details: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
     }, { status: 500 });
   }
 }
