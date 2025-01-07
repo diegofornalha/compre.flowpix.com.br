@@ -1,12 +1,15 @@
 'use client';
 
-import { createClient } from '@supabase/supabase-js';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.STORAGE_NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.STORAGE_SUPABASE_SERVICE_ROLE_KEY;
+// Configuração do cliente Supabase
+const supabaseUrl = "https://mufbzujgegvmxscmcyvl.supabase.co";
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im11ZmJ6dWpnZWd2bXhzY21jeXZsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzYxOTkxMDksImV4cCI6MjA1MTc3NTEwOX0.Oi6VJVvGCnKMeKPBGFqGxNlOZHp8Ql_c7-oUQpLqG0M";
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
-}
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey); 
+// Exporta uma função que cria o cliente com as configurações
+export function createClient() {
+  return createClientComponentClient({
+    supabaseUrl,
+    supabaseKey: supabaseAnonKey
+  });
+} 

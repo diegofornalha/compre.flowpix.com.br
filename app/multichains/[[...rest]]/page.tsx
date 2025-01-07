@@ -4,13 +4,34 @@ import TransakWidget from "@/components/transak-widget";
 import NetworkNeon from "@/components/network-neon";
 import { SignUp } from "@clerk/nextjs";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/nextjs";
+import { createClient } from "@/lib/supabase/client";
 
 export default function MultiChainsPage() {
   const [showWidget, setShowWidget] = useState(false);
   const [transactionType, setTransactionType] = useState<"BUY" | "SELL">("BUY");
-  const { isSignedIn } = useAuth();
+  const [userProfile, setUserProfile] = useState<any>(null);
+  const { isSignedIn, userId } = useAuth();
+  const supabase = createClient();
+
+  useEffect(() => {
+    async function fetchUserProfile() {
+      if (isSignedIn && userId) {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', userId)
+          .single();
+
+        if (data && !error) {
+          setUserProfile(data);
+        }
+      }
+    }
+
+    fetchUserProfile();
+  }, [isSignedIn, userId]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -193,20 +214,57 @@ export default function MultiChainsPage() {
                     <div className="relative">
                       <div className="absolute inset-0 bg-red-500/20 rounded-2xl blur-xl" />
                       <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 relative">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">Escolha sua wallet Web3 para logar</h3>
-                        <div className="w-full max-w-md mx-auto">
-                          <SignUp
-                            afterSignUpUrl="/multichains"
-                            afterSignInUrl="/multichains"
-                            appearance={{
-                              elements: {
-                                formButtonPrimary: 
-                                  "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700",
-                                card: "bg-transparent shadow-none",
-                              },
-                            }}
-                          />
-                        </div>
+                        {isSignedIn && userProfile ? (
+                          <div className="text-center space-y-4">
+                            <h3 className="text-xl font-bold text-gray-900">Perfil do Usuário</h3>
+                            <div className="bg-gray-50 p-4 rounded-lg">
+                              <div className="grid grid-cols-2 gap-4 text-left">
+                                <div>
+                                  <p className="text-sm text-gray-500">ID do Usuário</p>
+                                  <p className="font-medium text-gray-900">{userProfile.id}</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-gray-500">Email</p>
+                                  <p className="font-medium text-gray-900">{userProfile.email || "Não informado"}</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-gray-500">Carteira</p>
+                                  <p className="font-medium text-gray-900 break-all">{userProfile.wallet_address || "Não configurada"}</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-gray-500">Membro desde</p>
+                                  <p className="font-medium text-gray-900">
+                                    {new Date(userProfile.created_at).toLocaleDateString('pt-BR')}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="mt-4">
+                              <p className="text-sm text-gray-500">
+                                Status: <span className="text-green-500 font-medium">Verificado</span>
+                              </p>
+                            </div>
+                          </div>
+                        ) : (
+                          <>
+                            <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">
+                              Escolha sua wallet Web3 para logar
+                            </h3>
+                            <div className="w-full max-w-md mx-auto">
+                              <SignUp
+                                afterSignUpUrl="/multichains"
+                                afterSignInUrl="/multichains"
+                                appearance={{
+                                  elements: {
+                                    formButtonPrimary: 
+                                      "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700",
+                                    card: "bg-transparent shadow-none",
+                                  },
+                                }}
+                              />
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   </motion.div>
