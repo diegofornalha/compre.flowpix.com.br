@@ -196,9 +196,15 @@ export default function MultiChainsPage() {
                         <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">Escolha sua wallet Web3 para logar</h3>
                         <div className="w-full max-w-md mx-auto">
                           <SignUp
-                            redirectUrl="/multichains"
-                            signInUrl="/cadastro"
-                            routing="hash"
+                            afterSignUpUrl="/multichains"
+                            afterSignInUrl="/multichains"
+                            appearance={{
+                              elements: {
+                                formButtonPrimary: 
+                                  "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700",
+                                card: "bg-transparent shadow-none",
+                              },
+                            }}
                           />
                         </div>
                       </div>
