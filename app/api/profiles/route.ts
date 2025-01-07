@@ -2,13 +2,14 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.STORAGE_NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.STORAGE_SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export async function GET(request: Request, { params }: { params: { userIds?: string } }) {
+export async function GET(request: Request) {
   try {
-    const userIds = params.userIds?.split(',') || [];
+    const { searchParams } = new URL(request.url);
+    const userIds = searchParams.get('userIds')?.split(',') || [];
 
     if (userIds.length === 0) {
       return NextResponse.json({ error: 'No user IDs provided' }, { status: 400 });
