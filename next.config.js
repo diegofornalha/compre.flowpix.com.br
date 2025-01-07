@@ -1,25 +1,36 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
+  images: {
+    domains: ["images.clerk.dev", "img.clerk.com"],
   },
-  webpack: (config) => {
-    config.experiments = { ...config.experiments, topLevelAwait: true };
-    return config;
-  },
-  output: "standalone",
-  reactStrictMode: true,
-  swcMinify: true,
-  distDir: ".next",
-  cleanDistDir: true,
-  generateBuildId: async () => {
-    return "build-" + Date.now();
-  },
-  poweredByHeader: false,
-  pageExtensions: ["js", "jsx", "ts", "tsx"],
-  env: {
-    NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.CLERK_PUBLISHABLE_KEY,
-    CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
+  async redirects() {
+    return [
+      {
+        source: "/flow",
+        destination: "/comprar",
+        permanent: true,
+      },
+      {
+        source: "/comprar/flow",
+        destination: "/comprar",
+        permanent: true,
+      },
+      {
+        source: "/comprar/eth",
+        destination: "/eth",
+        permanent: true,
+      },
+      {
+        source: "/comprar/polygon",
+        destination: "/polygon",
+        permanent: true,
+      },
+      {
+        source: "/comprar/btc",
+        destination: "/btc",
+        permanent: true,
+      },
+    ];
   },
 };
 

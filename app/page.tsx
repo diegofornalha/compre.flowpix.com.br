@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import TransakWidget from "@/components/transak-widget";
+import NetworkNeon from "@/components/network-neon";
 import Link from "next/link";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
@@ -13,6 +14,7 @@ export default function Home() {
   });
 
   const [isPulsing, setIsPulsing] = useState(false);
+  const [showWidget, setShowWidget] = useState(false);
 
   useEffect(() => {
     // Inicia o efeito pulsante após um delay
@@ -241,7 +243,19 @@ export default function Home() {
             transition={{ duration: 0.6 }}
             className="order-1 lg:order-2 lg:sticky lg:top-8"
           >
-            <TransakWidget />
+            <div className="relative h-[600px]">
+              <div className="absolute inset-0">
+                <NetworkNeon
+                  color="#12cf83"
+                  title="O NOVO PIX"
+                  subtitle="é o Token FLOW"
+                  onLoadComplete={() => setShowWidget(true)}
+                />
+              </div>
+              <div className={`absolute inset-0 transition-opacity duration-500 ${showWidget ? 'opacity-100' : 'opacity-0'}`}>
+                <TransakWidget cryptoCurrency="FLOW" />
+              </div>
+            </div>
           </motion.div>
         </div>
       </div>

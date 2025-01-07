@@ -9,7 +9,8 @@ export default function ObrigadoPage() {
   const status = searchParams.get("status");
   const orderId = searchParams.get("orderId");
 
-  console.log("Transaction details:", { status, orderId });
+  console.log("Transaction Status:", status);
+  console.log("Order ID:", orderId);
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-white to-gray-50">
@@ -24,84 +25,65 @@ export default function ObrigadoPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="bg-white rounded-2xl shadow-xl p-8 lg:p-12 relative overflow-hidden mb-8"
+            className="bg-white rounded-2xl shadow-xl p-8 lg:p-12 mb-8"
           >
             <motion.div
-              className="absolute inset-0 bg-gradient-to-br from-green-50 to-green-100"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            />
-            <div className="relative z-10">
-              <motion.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="w-20 h-20 bg-gradient-to-r from-green-500 to-green-600 rounded-full mx-auto mb-6 flex items-center justify-center"
-              >
-                <svg
-                  className="w-10 h-10 text-white"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              </motion.div>
-              <motion.h1
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-                className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
-              >
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="mb-8"
+            >
+              <h1 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent mb-4">
                 Obrigado pela sua compra!
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                className="text-xl text-gray-600 mb-4"
-              >
+              </h1>
+              <p className="text-xl text-gray-600">
                 Sua transação foi processada com sucesso.
-              </motion.p>
-              {orderId && (
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6 }}
-                  className="text-lg text-gray-500 mb-8"
+                {orderId && (
+                  <span className="block mt-2 text-sm text-gray-500">
+                    ID da transação: {orderId}
+                  </span>
+                )}
+              </p>
+            </motion.div>
+
+            <div className="space-y-4">
+              <Link href="/cadastro">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full py-5 px-8 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold rounded-xl text-lg shadow-lg hover:shadow-xl transition-all duration-300"
                 >
-                  ID do Pedido: {orderId}
-                </motion.p>
-              )}
+                  Fazer Cadastro
+                </motion.button>
+              </Link>
+
+              <Link href="/">
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full py-5 px-8 bg-white text-green-600 font-semibold rounded-xl text-lg shadow-lg hover:shadow-xl transition-all duration-300 border border-green-100"
+                >
+                  Voltar para o Início
+                </motion.button>
+              </Link>
             </div>
           </motion.div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
-            <Link href="/cadastro">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-full sm:w-64 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold py-5 px-8 rounded-xl text-lg shadow-lg hover:shadow-xl transition-all duration-300"
-              >
-                Fazer Cadastro
-              </motion.button>
-            </Link>
-            <Link href="/flow">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="w-full sm:w-64 bg-white text-green-600 font-semibold py-5 px-8 rounded-xl text-lg shadow-lg hover:shadow-xl transition-all duration-300 border border-green-100"
-              >
-                Comprar Mais Tokens
-              </motion.button>
-            </Link>
-          </div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-gray-500 text-sm"
+          >
+            Se precisar de ajuda, entre em contato com nosso{" "}
+            <a
+              href="/suporte"
+              className="text-green-600 hover:text-green-700 underline"
+            >
+              suporte
+            </a>
+            .
+          </motion.div>
         </motion.div>
       </div>
     </main>

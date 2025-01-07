@@ -3,77 +3,63 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 
-declare global {
-  interface Window {
-    transak: any;
-  }
-}
-
 export default function EthereumWidget() {
   useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://global.transak.com/sdk/v1.1/widget.js";
-    script.async = true;
-    document.body.appendChild(script);
+    // Inicializa o widget do Transak
+    const transakScript = document.createElement("script");
+    transakScript.src = "https://global.transak.com/sdk/v1.1/widget.js";
+    transakScript.async = true;
+    document.body.appendChild(transakScript);
 
-    script.onload = () => {
-      let transak = new window.transak("STAGING");
-      let settings = {
+    // Configura e inicializa o widget
+    transakScript.onload = () => {
+      let transak = new (window as any).TransakSDK.default({
         apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY,
-        environment: "STAGING",
+        environment: "PRODUCTION",
         defaultCryptoCurrency: "ETH",
-        themeColor: "3B82F6",
-        hostURL: window.location.origin,
-        widgetHeight: "700px",
-        widgetWidth: "500px",
-        defaultNetwork: "ethereum",
+        network: "ethereum",
         cryptoCurrencyList: "ETH",
+        defaultNetwork: "ethereum",
         walletAddress: "",
-        disableWalletAddressForm: true,
+        themeColor: "2563eb", // Cor azul do Ethereum
+        fiatCurrency: "BRL",
         email: "",
         redirectURL: "",
-      };
+        hostURL: window.location.origin,
+        widgetHeight: "650px",
+        widgetWidth: "100%",
+      });
 
-      transak.init(settings);
+      transak.init();
+
+      // Manipuladores de eventos
+      transak.on(transak.EVENTS.TRANSAK_WIDGET_CLOSE, () => {
+        transak.close();
+      });
+
+      transak.on(transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData: any) => {
+        console.log(orderData);
+        transak.close();
+        
+        // Redireciona para a página de agradecimento com os parâmetros
+        window.location.href = `/obrigado?status=success&orderId=${orderData.id}`;
+      });
     };
 
+    // Limpeza
     return () => {
-      document.body.removeChild(script);
+      document.body.removeChild(transakScript);
     };
   }, []);
 
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white rounded-2xl shadow-2xl p-6 lg:p-8 relative overflow-hidden"
+      className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100"
     >
-      <motion.div
-        className="absolute inset-0 bg-gradient-to-br from-blue-50 to-blue-100"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      />
-      <div className="relative z-10">
-        <motion.h1
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="text-3xl lg:text-4xl font-bold text-gray-900 mb-6"
-        >
-          Comprar Ethereum
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="text-gray-600 mb-8"
-        >
-          Compre ETH de forma rápida e segura usando vários métodos de pagamento.
-        </motion.p>
-        <div id="transakWidget" className="w-full min-h-[700px]" />
-      </div>
+      <div id="transak-onramp-widget-container" />
     </motion.div>
   );
 } 

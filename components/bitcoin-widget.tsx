@@ -1,32 +1,55 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { motion } from "framer-motion";
 
 export default function BitcoinWidget() {
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-
   useEffect(() => {
-    const transakConfig = {
-      apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY,
-      environment: process.env.NEXT_PUBLIC_ENVIRONMENT,
-      defaultCryptoCurrency: 'BTC',
-      walletAddress: '', // será preenchido quando integrado com carteira
-      themeColor: '#F7931A', // Cor do Bitcoin
-      fiatCurrency: 'BRL',
-      email: '', // será preenchido com o email do usuário
-      redirectURL: '',
-      hostURL: window.location.origin,
-      widgetHeight: "650px",
-      widgetWidth: "100%",
+    // Inicializa o widget do Transak
+    const transakScript = document.createElement("script");
+    transakScript.src = "https://global.transak.com/sdk/v1.1/widget.js";
+    transakScript.async = true;
+    document.body.appendChild(transakScript);
+
+    // Configura e inicializa o widget
+    transakScript.onload = () => {
+      let transak = new (window as any).TransakSDK.default({
+        apiKey: process.env.NEXT_PUBLIC_TRANSAK_API_KEY,
+        environment: "PRODUCTION",
+        defaultCryptoCurrency: "BTC",
+        network: "bitcoin",
+        cryptoCurrencyList: "BTC",
+        defaultNetwork: "bitcoin",
+        walletAddress: "",
+        themeColor: "f97316", // Cor laranja do Bitcoin
+        fiatCurrency: "BRL",
+        email: "",
+        redirectURL: "",
+        hostURL: window.location.origin,
+        widgetHeight: "650px",
+        widgetWidth: "100%",
+      });
+
+      transak.init();
+
+      // Manipuladores de eventos
+      transak.on(transak.EVENTS.TRANSAK_WIDGET_CLOSE, () => {
+        transak.close();
+      });
+
+      transak.on(transak.EVENTS.TRANSAK_ORDER_SUCCESSFUL, (orderData: any) => {
+        console.log(orderData);
+        transak.close();
+        
+        // Redireciona para a página de agradecimento com os parâmetros
+        window.location.href = `/obrigado?status=success&orderId=${orderData.id}`;
+      });
     };
 
-    const queryString = new URLSearchParams(transakConfig as any).toString();
-    const widgetUrl = `https://global.transak.com?${queryString}`;
-
-    if (iframeRef.current) {
-      iframeRef.current.src = widgetUrl;
-    }
+    // Limpeza
+    return () => {
+      document.body.removeChild(transakScript);
+    };
   }, []);
 
   return (
@@ -34,20 +57,9 @@ export default function BitcoinWidget() {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="bg-white rounded-2xl shadow-xl overflow-hidden"
+      className="bg-white rounded-2xl shadow-xl p-6 border border-gray-100"
     >
-      <div className="p-6 bg-gradient-to-r from-orange-500 to-orange-600">
-        <h2 className="text-2xl font-bold text-white mb-2">Comprar Bitcoin</h2>
-        <p className="text-orange-50">
-          Compre BTC diretamente com PIX, cartão ou transferência
-        </p>
-      </div>
-      <iframe
-        ref={iframeRef}
-        className="w-full h-[650px] border-0"
-        title="Transak On-Ramp Widget (Bitcoin)"
-        allow="camera;microphone;payment"
-      />
+      <div id="transak-onramp-widget-container" />
     </motion.div>
   );
 } 
