@@ -75,6 +75,9 @@ importers:
         specifier: ^4.5.5
         version: 4.5.5(@types/react@18.3.18)(react@18.3.1)
     devDependencies:
+      '@clerk/types':
+        specifier: ^4.40.0
+        version: 4.40.0
       '@types/node':
         specifier: ^20.17.12
         version: 20.17.12
@@ -149,6 +152,10 @@ packages:
 
   '@clerk/types@4.26.0':
     resolution: {integrity: sha512-VGcrQz/XpCiGbpIIzKVwWw4nLorzKnIP1IAemj1xt/80ULcdEZCncwhas6PoYBBsl1W55A1SwP9B/pEs0nmkCw==}
+    engines: {node: '>=18.17.0'}
+
+  '@clerk/types@4.40.0':
+    resolution: {integrity: sha512-9QdllXYujsjYLbvPg9Kq1rWOemX5FB0r6Ijy8HOxwjKN+TPlxUnGcs+t7IwU+M5gdmZ2KV6aA6d1a2q2FlSoiA==}
     engines: {node: '>=18.17.0'}
 
   '@es-joy/jsdoccomment@0.41.0':
@@ -3055,6 +3062,10 @@ snapshots:
       react-dom: 18.3.1(react@18.3.1)
 
   '@clerk/types@4.26.0':
+    dependencies:
+      csstype: 3.1.1
+
+  '@clerk/types@4.40.0':
     dependencies:
       csstype: 3.1.1
 

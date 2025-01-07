@@ -8,36 +8,53 @@ import { useState } from "react";
 export default function EthereumPage() {
   const [showWidget, setShowWidget] = useState(false);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.5,
+      },
+    },
+  };
+
   return (
     <main className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       <div className="container mx-auto px-4 py-12 lg:py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
           {/* Coluna da esquerda - Como funciona */}
-          <div className="order-2 lg:order-1 space-y-8">
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="order-2 lg:order-1 space-y-8"
+          >
             <section>
-              <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#627EEA] to-[#627EEA] bg-clip-text text-transparent mb-8">
+              <motion.h2 
+                variants={itemVariants}
+                className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#627EEA] to-[#627EEA] bg-clip-text text-transparent mb-8"
+              >
                 Como funciona
-              </h2>
+              </motion.h2>
               <div className="space-y-6">
                 <motion.div 
+                  variants={itemVariants}
                   initial="initial"
                   animate="pulse"
-                  variants={{
-                    initial: { boxShadow: "0 0 0 rgba(98, 126, 234, 0)" },
-                    pulse: {
-                      boxShadow: [
-                        "0 0 0 rgba(98, 126, 234, 0)",
-                        "0 0 20px rgba(98, 126, 234, 0.3)",
-                        "0 0 40px rgba(98, 126, 234, 0.2)",
-                        "0 0 0 rgba(98, 126, 234, 0)",
-                      ],
-                      transition: {
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      },
-                    },
-                  }}
+                  custom={0}
+                  whileHover={{ scale: 1.02 }}
                   className="flex items-center gap-4 bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
                 >
                   <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#627EEA] to-[#627EEA] flex items-center justify-center flex-shrink-0">
@@ -52,24 +69,11 @@ export default function EthereumPage() {
                 </motion.div>
 
                 <motion.div 
+                  variants={itemVariants}
                   initial="initial"
                   animate="pulse"
-                  variants={{
-                    initial: { boxShadow: "0 0 0 rgba(98, 126, 234, 0)" },
-                    pulse: {
-                      boxShadow: [
-                        "0 0 0 rgba(98, 126, 234, 0)",
-                        "0 0 20px rgba(98, 126, 234, 0.3)",
-                        "0 0 40px rgba(98, 126, 234, 0.2)",
-                        "0 0 0 rgba(98, 126, 234, 0)",
-                      ],
-                      transition: {
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      },
-                    },
-                  }}
+                  custom={1}
+                  whileHover={{ scale: 1.02 }}
                   className="flex items-center gap-4 bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
                 >
                   <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#627EEA] to-[#627EEA] flex items-center justify-center flex-shrink-0">
@@ -84,24 +88,11 @@ export default function EthereumPage() {
                 </motion.div>
 
                 <motion.div 
+                  variants={itemVariants}
                   initial="initial"
                   animate="pulse"
-                  variants={{
-                    initial: { boxShadow: "0 0 0 rgba(98, 126, 234, 0)" },
-                    pulse: {
-                      boxShadow: [
-                        "0 0 0 rgba(98, 126, 234, 0)",
-                        "0 0 20px rgba(98, 126, 234, 0.3)",
-                        "0 0 40px rgba(98, 126, 234, 0.2)",
-                        "0 0 0 rgba(98, 126, 234, 0)",
-                      ],
-                      transition: {
-                        duration: 2,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      },
-                    },
-                  }}
+                  custom={2}
+                  whileHover={{ scale: 1.02 }}
                   className="flex items-center gap-4 bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100"
                 >
                   <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#627EEA] to-[#627EEA] flex items-center justify-center flex-shrink-0">
@@ -116,13 +107,13 @@ export default function EthereumPage() {
                 </motion.div>
               </div>
             </section>
-          </div>
+          </motion.div>
 
           {/* Coluna da direita - Widget */}
           <motion.div 
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
             className="order-1 lg:order-2 lg:sticky lg:top-8"
           >
             <div className="relative h-[600px]">
