@@ -4,6 +4,9 @@ import { SignUp } from "@clerk/nextjs";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { useAuth } from "@clerk/nextjs";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 // Embate 1: Animações e Transições
 // Vencedor: Animações Suaves e Progressivas
@@ -28,12 +31,18 @@ const itemVariants = {
 };
 
 export default function CadastroPage() {
-  // Embate 2: Detecção de Viewport
-  // Vencedor: Animação baseada em visualização
+  const { isLoaded, userId } = useAuth();
+  const router = useRouter();
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1
   });
+
+  useEffect(() => {
+    if (isLoaded && userId) {
+      router.replace("/flow");
+    }
+  }, [isLoaded, userId, router]);
 
   // Embate 9: Configuração do Clerk
   // Vencedor: Tema Personalizado sem Dependências Externas
@@ -69,7 +78,6 @@ export default function CadastroPage() {
       alertSuccess: "bg-green-50 text-green-700 border border-green-200",
       alertWarning: "bg-yellow-50 text-yellow-700 border border-yellow-200",
       alertError: "bg-red-50 text-red-700 border border-red-200",
-      // Embate 10: Melhorias de Acessibilidade
       formFieldInputShowPasswordButton: "text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-md",
       formFieldInputShowPasswordIcon: "w-5 h-5",
       formResendCodeLink: "text-green-500 hover:text-green-600 transition-colors duration-200",
@@ -78,10 +86,7 @@ export default function CadastroPage() {
   };
 
   return (
-    // Embate 3: Layout e Fundo
-    // Vencedor: Design com Gradiente Suave e Padrão Moderno
     <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden">
-      {/* Padrão de Fundo Decorativo */}
       <div className="absolute inset-0 bg-grid-pattern opacity-5" />
       
       <motion.div 
@@ -92,12 +97,7 @@ export default function CadastroPage() {
         className="container mx-auto px-4 py-12 lg:py-16 relative z-10"
       >
         <div className="max-w-4xl mx-auto">
-          {/* Embate 4: Header e Branding
-              Vencedor: Logo Animado com Efeito Neon */}
-          <motion.div 
-            variants={itemVariants}
-            className="text-center mb-12"
-          >
+          <motion.div variants={itemVariants} className="text-center mb-12">
             <Link href="/" className="inline-block group">
               <motion.h1 
                 className="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent hover:scale-105 transform transition-all duration-300"
@@ -108,21 +108,15 @@ export default function CadastroPage() {
                 FLOW PIX
               </motion.h1>
             </Link>
-            <motion.p 
-              variants={itemVariants}
-              className="mt-4 text-xl text-gray-600"
-            >
+            <motion.p variants={itemVariants} className="mt-4 text-xl text-gray-600">
               A maneira mais fácil de comprar tokens FLOW no Brasil
             </motion.p>
           </motion.div>
 
-          {/* Embate 5: Container de Cadastro
-              Vencedor: Card com Efeito de Profundidade e Borda Suave */}
           <motion.div 
             variants={itemVariants}
             className="bg-white rounded-2xl p-8 lg:p-12 shadow-xl border border-gray-100 backdrop-blur-sm relative overflow-hidden"
           >
-            {/* Efeito de Gradiente Animado */}
             <motion.div 
               className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-green-600/5"
               animate={{
@@ -136,10 +130,7 @@ export default function CadastroPage() {
             />
 
             <div className="relative z-10">
-              <motion.div 
-                variants={itemVariants}
-                className="mb-8 text-center"
-              >
+              <motion.div variants={itemVariants} className="mb-8 text-center">
                 <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
                   Crie sua conta na FlowPix
                 </h2>
@@ -148,7 +139,6 @@ export default function CadastroPage() {
                 </p>
               </motion.div>
 
-              {/* Embate 11: Integração Clerk Otimizada */}
               <SignUp
                 appearance={clerkAppearance}
                 redirectUrl="/obrigado"
@@ -158,12 +148,7 @@ export default function CadastroPage() {
                 afterSignUpUrl="/obrigado"
               />
 
-              {/* Embate 7: Termos e Condições
-                  Vencedor: Links Interativos com Feedback */}
-              <motion.div 
-                variants={itemVariants}
-                className="mt-8 text-center text-sm text-gray-500"
-              >
+              <motion.div variants={itemVariants} className="mt-8 text-center text-sm text-gray-500">
                 <p className="space-x-1">
                   <span>Ao se cadastrar, você concorda com nossos</span>
                   <Link 
