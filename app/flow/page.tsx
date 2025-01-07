@@ -14,6 +14,14 @@ const networks = [
     color: "from-green-400 to-green-600"
   },
   {
+    id: "btc",
+    name: "Bitcoin",
+    icon: "/btc-icon.svg",
+    description: "A primeira e mais segura criptomoeda",
+    benefits: ["Alta segurança", "Maior adoção", "Reserva de valor"],
+    color: "from-orange-400 to-orange-600"
+  },
+  {
     id: "ethereum",
     name: "Ethereum",
     icon: "/eth-icon.svg",
@@ -58,6 +66,8 @@ export default function FlowPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white py-12">
+      <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+      
       <motion.div
         ref={ref}
         initial="hidden"

@@ -1,114 +1,109 @@
 "use client";
 
-import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export default function ObrigadoPage() {
   const searchParams = useSearchParams();
   const status = searchParams.get("status");
   const orderId = searchParams.get("orderId");
 
-  useEffect(() => {
-    // Aqui você pode adicionar analytics ou outras integrações
-    console.log("Transação concluída:", { status, orderId });
-  }, [status, orderId]);
+  console.log("Transaction details:", { status, orderId });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="max-w-md w-full space-y-8 bg-white p-10 rounded-2xl shadow-xl"
-      >
-        <div className="text-center">
-          <motion.div 
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ 
-              type: "spring",
-              stiffness: 260,
-              damping: 20 
-            }}
-            className="w-20 h-20 bg-green-100 rounded-full mx-auto flex items-center justify-center mb-6"
+    <main className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+      <div className="container mx-auto px-4 py-12 lg:py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-2xl mx-auto text-center"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white rounded-2xl shadow-xl p-8 lg:p-12 relative overflow-hidden mb-8"
           >
-            <svg
-              className="h-12 w-12 text-green-500"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <motion.path
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-green-50 to-green-100"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            />
+            <div className="relative z-10">
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="w-20 h-20 bg-gradient-to-r from-green-500 to-green-600 rounded-full mx-auto mb-6 flex items-center justify-center"
+              >
+                <svg
+                  className="w-10 h-10 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              </motion.div>
+              <motion.h1
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="text-4xl lg:text-5xl font-bold text-gray-900 mb-4"
+              >
+                Obrigado pela sua compra!
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+                className="text-xl text-gray-600 mb-4"
+              >
+                Sua transação foi processada com sucesso.
+              </motion.p>
+              {orderId && (
+                <motion.p
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6 }}
+                  className="text-lg text-gray-500 mb-8"
+                >
+                  ID do Pedido: {orderId}
+                </motion.p>
+              )}
+            </div>
           </motion.div>
 
-          <motion.h2 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="text-3xl font-extrabold text-gray-900 mb-2"
-          >
-            Obrigado pela sua compra!
-          </motion.h2>
-          
-          <motion.p 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="text-lg text-gray-600 mb-8"
-          >
-            Sua transação foi processada com sucesso.
-            {orderId && (
-              <span className="block text-sm text-gray-500 mt-2">
-                ID do Pedido: {orderId}
-              </span>
-            )}
-          </motion.p>
-
-          <div className="space-y-4">
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.5 }}
-              className="bg-green-50 p-4 rounded-lg"
-            >
-              <p className="text-green-800">
-                Seus FLOW tokens serão enviados para sua carteira em breve.
-              </p>
-            </motion.div>
-
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
-              className="flex flex-col space-y-3"
-            >
-              <Link href="/cadastro">
-                <Button className="w-full bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white">
-                  Fazer Cadastro
-                </Button>
-              </Link>
-
-              <Link href="/flow">
-                <Button className="w-full border border-gray-300 bg-white text-gray-700 hover:bg-gray-50">
-                  Comprar em Outras Redes
-                </Button>
-              </Link>
-            </motion.div>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+            <Link href="/cadastro">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full sm:w-64 bg-gradient-to-r from-green-500 to-green-600 text-white font-semibold py-5 px-8 rounded-xl text-lg shadow-lg hover:shadow-xl transition-all duration-300"
+              >
+                Fazer Cadastro
+              </motion.button>
+            </Link>
+            <Link href="/flow">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="w-full sm:w-64 bg-white text-green-600 font-semibold py-5 px-8 rounded-xl text-lg shadow-lg hover:shadow-xl transition-all duration-300 border border-green-100"
+              >
+                Comprar Mais Tokens
+              </motion.button>
+            </Link>
           </div>
-        </div>
-      </motion.div>
-    </div>
+        </motion.div>
+      </div>
+    </main>
   );
 } 

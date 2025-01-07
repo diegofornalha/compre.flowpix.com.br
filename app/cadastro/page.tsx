@@ -1,175 +1,95 @@
 "use client";
 
 import { SignUp } from "@clerk/nextjs";
-import Link from "next/link";
 import { motion } from "framer-motion";
-import { useInView } from "react-intersection-observer";
-import { useAuth } from "@clerk/nextjs";
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-
-// Embate 1: Animações e Transições
-// Vencedor: Animações Suaves e Progressivas
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      duration: 0.5,
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const itemVariants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.5 }
-  }
-};
+import Link from "next/link";
 
 export default function CadastroPage() {
-  const { isLoaded, userId } = useAuth();
-  const router = useRouter();
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1
-  });
-
-  useEffect(() => {
-    if (isLoaded && userId) {
-      router.replace("/flow");
-    }
-  }, [isLoaded, userId, router]);
-
-  // Embate 9: Configuração do Clerk
-  // Vencedor: Tema Personalizado sem Dependências Externas
-  const clerkAppearance = {
-    variables: {
-      colorPrimary: '#22c55e',
-      colorTextOnPrimaryBackground: '#ffffff',
-      colorBackground: '#ffffff',
-      colorText: '#111827',
-      colorDanger: '#ef4444',
-      colorSuccess: '#22c55e',
-      colorWarning: '#f59e0b',
-      borderRadius: '0.75rem'
-    },
-    elements: {
-      formButtonPrimary:
-        "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white transition-all duration-300 transform hover:scale-[1.02] shadow-lg hover:shadow-xl",
-      card: "bg-transparent shadow-none",
-      headerTitle: "text-gray-900 text-2xl",
-      headerSubtitle: "text-gray-600",
-      socialButtonsBlockButton: "border-gray-200 bg-white hover:bg-gray-50 transition-colors duration-200 flex items-center justify-center gap-2",
-      socialButtonsBlockButtonText: "text-gray-600 font-medium",
-      socialButtonsProviderIcon: "w-5 h-5",
-      formFieldLabel: "text-gray-700 font-medium",
-      formFieldInput: "border-gray-200 focus:border-green-500 focus:ring-green-500 transition-all duration-200 rounded-lg",
-      footerActionText: "text-gray-600",
-      footerActionLink: "text-green-500 hover:text-green-600 transition-colors duration-200",
-      dividerLine: "bg-gray-200",
-      dividerText: "text-gray-500 bg-white px-4",
-      formFieldSuccessText: "text-green-500",
-      formFieldErrorText: "text-red-500",
-      alert: "rounded-lg p-4 text-sm",
-      alertSuccess: "bg-green-50 text-green-700 border border-green-200",
-      alertWarning: "bg-yellow-50 text-yellow-700 border border-yellow-200",
-      alertError: "bg-red-50 text-red-700 border border-red-200",
-      formFieldInputShowPasswordButton: "text-gray-500 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 rounded-md",
-      formFieldInputShowPasswordIcon: "w-5 h-5",
-      formResendCodeLink: "text-green-500 hover:text-green-600 transition-colors duration-200",
-      otpCodeFieldInput: "border-gray-200 focus:border-green-500 focus:ring-green-500 transition-all duration-200 rounded-lg text-center"
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white via-gray-50 to-white relative overflow-hidden">
-      <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-      
-      <motion.div 
-        ref={ref}
-        initial="hidden"
-        animate={inView ? "visible" : "hidden"}
-        variants={containerVariants}
-        className="container mx-auto px-4 py-12 lg:py-16 relative z-10"
-      >
-        <div className="max-w-4xl mx-auto">
-          <motion.div variants={itemVariants} className="text-center mb-12">
-            <Link href="/" className="inline-block group">
-              <motion.h1 
-                className="text-4xl lg:text-6xl font-bold bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent hover:scale-105 transform transition-all duration-300"
-                whileHover={{
-                  textShadow: "0 0 8px rgba(34, 197, 94, 0.4)"
-                }}
-              >
-                FLOW PIX
-              </motion.h1>
-            </Link>
-            <motion.p variants={itemVariants} className="mt-4 text-xl text-gray-600">
-              A maneira mais fácil de comprar tokens FLOW no Brasil
-            </motion.p>
+    <main className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+      <div className="container mx-auto px-4 py-12 lg:py-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="max-w-md mx-auto"
+        >
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="text-center mb-8"
+          >
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-green-500 to-green-600 bg-clip-text text-transparent mb-4">
+              Crie sua conta na FlowPix
+            </h1>
+            <p className="text-gray-600 text-lg">
+              Comece a comprar e vender FLOW tokens de forma rápida e segura
+            </p>
           </motion.div>
 
-          <motion.div 
-            variants={itemVariants}
-            className="bg-white rounded-2xl p-8 lg:p-12 shadow-xl border border-gray-100 backdrop-blur-sm relative overflow-hidden"
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white rounded-2xl shadow-xl p-6 lg:p-8 relative overflow-hidden"
           >
-            <motion.div 
-              className="absolute inset-0 bg-gradient-to-r from-green-500/5 to-green-600/5"
-              animate={{
-                opacity: [0.5, 0.3, 0.5],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-br from-green-50 to-green-100"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
             />
-
             <div className="relative z-10">
-              <motion.div variants={itemVariants} className="mb-8 text-center">
-                <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                  Crie sua conta na FlowPix
-                </h2>
-                <p className="text-gray-600 max-w-md mx-auto text-lg">
-                  Comece a comprar e vender FLOW tokens de forma rápida e segura
-                </p>
-              </motion.div>
-
-              <SignUp
-                appearance={clerkAppearance}
-                redirectUrl="/obrigado"
-                routing="path"
-                path="/cadastro"
-                signInUrl="/login"
-                afterSignUpUrl="/obrigado"
-              />
-
-              <motion.div variants={itemVariants} className="mt-8 text-center text-sm text-gray-500">
-                <p className="space-x-1">
-                  <span>Ao se cadastrar, você concorda com nossos</span>
-                  <Link 
-                    href="/termos" 
-                    className="text-green-500 hover:text-green-600 transition-colors duration-200 hover:underline"
-                  >
-                    Termos de Serviço
-                  </Link>
-                  <span>e</span>
-                  <Link 
-                    href="/privacidade" 
-                    className="text-green-500 hover:text-green-600 transition-colors duration-200 hover:underline"
-                  >
-                    Política de Privacidade
-                  </Link>
-                </p>
-              </motion.div>
+              <div className="flex flex-col items-center justify-center space-y-6">
+                <SignUp
+                  appearance={{
+                    elements: {
+                      formButtonPrimary:
+                        "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold py-3 px-6 rounded-xl transition-all duration-200 shadow-md hover:shadow-lg w-full",
+                      footerActionLink:
+                        "text-green-600 hover:text-green-700 font-semibold",
+                      formFieldInput:
+                        "w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-200",
+                      dividerLine: "bg-gray-200",
+                      dividerText: "text-gray-400 mx-4",
+                      formFieldLabel: "text-gray-600 font-medium",
+                      identityPreviewText: "text-gray-600",
+                      identityPreviewEditButton:
+                        "text-green-600 hover:text-green-700",
+                      headerTitle: "text-2xl font-bold text-gray-900",
+                      headerSubtitle: "text-gray-600",
+                      socialButtonsBlockButton:
+                        "flex items-center justify-center w-full px-6 py-3 mb-4 text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-sm hover:shadow space-x-2",
+                      socialButtonsBlockButtonText: "font-semibold",
+                    },
+                  }}
+                />
+              </div>
             </div>
           </motion.div>
-        </div>
-      </motion.div>
-    </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-center mt-8"
+          >
+            <Link
+              href="/flow"
+              className="inline-block bg-white text-green-600 font-semibold py-4 px-8 rounded-xl text-lg transition-all duration-300 shadow-md hover:shadow-lg relative overflow-hidden group"
+            >
+              <motion.span
+                className="absolute inset-0 bg-gradient-to-r from-green-100 to-green-50"
+                initial={{ x: "-100%" }}
+                whileHover={{ x: "100%" }}
+                transition={{ duration: 0.5 }}
+              />
+              <span className="relative z-10">Comprar em Outras Redes</span>
+            </Link>
+          </motion.div>
+        </motion.div>
+      </div>
+    </main>
   );
 } 
