@@ -97,7 +97,7 @@ export default function UrzekeNFTPage(): ReactElement {
                       </svg>
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-gray-900">FAÇA O LOGIN PARA RECEBER NFTs</h3>
+                      <h3 className="text-xl font-bold text-gray-900">COMPRE NFTs E GANHE TOKENS $BR</h3>
                       <p className="text-gray-600">Quanto mais NFTs você comprar, mais tokens $BR vai receber.</p>
                     </div>
                   </motion.div>
@@ -218,11 +218,37 @@ export default function UrzekeNFTPage(): ReactElement {
                 </motion.div>
 
                 <div className="mt-auto space-y-4">
-                  <motion.div variants={itemVariants}>
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-red-500/20 rounded-2xl blur-xl" />
-                      <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 relative">
-                        {isSignedIn && userProfile ? (
+                  {!isSignedIn && (
+                    <motion.div variants={itemVariants}>
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-red-500/20 rounded-2xl blur-xl" />
+                        <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 relative">
+                          <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">
+                            Faça login para receber cashback em tokens $BR
+                          </h3>
+                          <div className="w-full max-w-md mx-auto">
+                            <SignUp
+                              afterSignUpUrl="/multichains/urzekenft"
+                              afterSignInUrl="/multichains/urzekenft"
+                              appearance={{
+                                elements: {
+                                  formButtonPrimary: 
+                                    "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700",
+                                  card: "bg-transparent shadow-none",
+                                },
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {isSignedIn && userProfile && (
+                    <motion.div variants={itemVariants}>
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-red-500/20 rounded-2xl blur-xl" />
+                        <div className="bg-white p-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 relative">
                           <div className="text-center space-y-4">
                             <h3 className="text-xl font-bold text-gray-900">Perfil do Usuário</h3>
                             <div className="bg-gray-50 p-4 rounded-lg">
@@ -253,29 +279,10 @@ export default function UrzekeNFTPage(): ReactElement {
                               </p>
                             </div>
                           </div>
-                        ) : (
-                          <>
-                            <h3 className="text-xl font-bold text-gray-900 mb-4 text-center">
-                              Escolha sua wallet Web3 para logar
-                            </h3>
-                            <div className="w-full max-w-md mx-auto">
-                              <SignUp
-                                afterSignUpUrl="/multichains/urzekenft"
-                                afterSignInUrl="/multichains/urzekenft"
-                                appearance={{
-                                  elements: {
-                                    formButtonPrimary: 
-                                      "bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700",
-                                    card: "bg-transparent shadow-none",
-                                  },
-                                }}
-                              />
-                            </div>
-                          </>
-                        )}
+                        </div>
                       </div>
-                    </div>
-                  </motion.div>
+                    </motion.div>
+                  )}
 
                   <motion.div variants={itemVariants}>
                     <div className="relative">
